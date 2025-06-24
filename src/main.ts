@@ -1,3 +1,9 @@
+import { createRequire } from 'node:module'
+import url from 'node:url'
+
+globalThis.require = createRequire(import.meta.url)
+globalThis.__filename = url.fileURLToPath(import.meta.url)
+globalThis.__dirname = path.dirname(__filename) 
 import * as core from '@actions/core'
 import { downloadZstd } from './download-release'
 import * as path from 'path'
