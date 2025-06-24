@@ -45,7 +45,8 @@
     "node-stream-zip": "^1.15.0",
     "rimraf": "^6.0.1",
     "tar": "^7.4.3",
-    "typed-rest-client": "^2.1.0"
+    "typed-rest-client": "^2.1.0",
+    "yauzl": "^3.2.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
@@ -73,6 +74,11 @@
     "ts-jest": "^29.3.4",
     "ts-jest-resolver": "^2.0.1",
     "typescript": "^5.8.3"
+  },
+  "overrides": {
+    "extract-zip": {
+      "yauzl": "^3.2.0"
+    }
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"

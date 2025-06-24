@@ -62,7 +62,7 @@ export async function run(): Promise<void> {
       }
     }
     const outputPath = core.getInput('outputPath')
-    let tempTar = path.join(tmpdir(), 'temp.tar')
+    let tempTar = path.join(process.cwd(), '../temp/temp.tar')
     console.log('临时', tempTar)
 
     const absOutputPath = path.join(process.cwd(), outputPath)
