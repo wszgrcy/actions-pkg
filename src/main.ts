@@ -17,9 +17,15 @@ async function downloadZstd(options: {
   let url = `https://github.com/facebook/zstd/releases/download/${options.tag}/${options.fileName}`
   console.log('准备下载', url)
 
-  await downloadFile({ url: url, savePath: tempPath })
+  let result = await downloadFile({ url: url, savePath: tempPath })
+  console.log(result)
+
   console.log('下载完成', tempPath)
+  console.log(fs.existsSync(tempPath))
+
   if (options.fileName.endsWith('.zip')) {
+    console.log('准备解压', outputPath)
+
     await extract(tempPath, { dir: outputPath })
     console.log('解压完成', outputPath)
   }
