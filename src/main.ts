@@ -12,6 +12,7 @@ import { rimraf } from 'rimraf'
 export async function run(): Promise<void> {
   try {
     console.log('env', process.env)
+  // tar.c({strip:1}, ['eic']).pipe(fs.createWriteStream('xxx.tar'));
 
     const zstdTag: string = core.getInput('zstdTag')
     const zstdFileName: string = core.getInput('zstdFileName')
