@@ -67,8 +67,8 @@ export async function run(): Promise<void> {
 
     const absOutputPath = path.join(process.cwd(), outputPath)
     tar.c({ sync: true }, [dir]).pipe(fs.createWriteStream(tempTar))
-    let res2 = fs.existsSync(absOutputPath)
-    console.log('是否存在', absOutputPath, res2)
+    let res2 = fs.existsSync(tempTar)
+    console.log('是否存在', tempTar, res2)
     if (`${platform()}` === 'win32') {
       console.log('准备压缩')
       console.log('命令', `zstd ${tempTar} -o ${absOutputPath} -T0 -1`)
