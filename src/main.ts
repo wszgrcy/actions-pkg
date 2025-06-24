@@ -68,13 +68,13 @@ export async function run(): Promise<void> {
     fs.mkdirSync(path.join(process.cwd(), '../temp'), { recursive: true })
     let tempTar = path.join(process.cwd(), '../temp/temp.tar')
     console.log('临时', tempTar)
-    let tempFileStream = fs.createWriteStream(tempTar)
-    tar.c({}, [dir]).pipe(tempFileStream)
-
-    await new Promise<void>((resolve, reject) => {
-      tempFileStream.on('finish', resolve)
-      tempFileStream.on('error', reject)
-    })
+    // let tempFileStream = fs.createWriteStream(tempTar)
+    // tar.c({}, [dir]).pipe(tempFileStream)
+    await tar.create({ file: tempTar }, [dir])
+    // await new Promise<void>((resolve, reject) => {
+    //   tempFileStream.on('finish', resolve)
+    //   tempFileStream.on('error', reject)
+    // })
     let res2 = fs.existsSync(tempTar)
     console.log('是否存在', tempTar, res2)
     const absOutputPath = path.join(process.cwd(), outputPath)
