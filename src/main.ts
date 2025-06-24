@@ -42,9 +42,9 @@ async function downloadZstd(options: {
 export async function run(): Promise<void> {
   try {
     console.log('env', process.env)
-    console.log(cpus())
-    console.log(cpuUsage())
-    console.log(memoryUsage())
+    // console.log(cpus())
+    // console.log(cpuUsage())
+    // console.log(memoryUsage())
 
     let cwd = await downloadZstd({
       tag: 'v1.5.7',
@@ -65,17 +65,19 @@ export async function run(): Promise<void> {
       }
     }
     const outputPath = core.getInput('outputPath')
+    fs.mkdirSync(path.join(process.cwd(), '../temp'), { recursive: true })
     let tempTar = path.join(process.cwd(), '../temp/temp.tar')
     console.log('临时', tempTar)
     let tempFileStream = fs.createWriteStream(tempTar)
-    const absOutputPath = path.join(process.cwd(), outputPath)
     tar.c({}, [dir]).pipe(tempFileStream)
+
     await new Promise<void>((resolve, reject) => {
       tempFileStream.on('finish', resolve)
       tempFileStream.on('error', reject)
     })
     let res2 = fs.existsSync(tempTar)
     console.log('是否存在', tempTar, res2)
+    const absOutputPath = path.join(process.cwd(), outputPath)
     if (`${platform()}` === 'win32') {
       console.log('准备压缩')
       console.log('命令', `zstd ${tempTar} -o ${absOutputPath} -T0 -1`)
