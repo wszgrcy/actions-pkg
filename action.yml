@@ -9,17 +9,13 @@ branding:
 
 # Define your inputs here.
 inputs:
-  zstdTag:
-    description: zstdTag
+  dir:
+    description: dir
     required: true
-    default: 'v1.5.7'
-  zstdFileName:
-    description: zstdFileName
+  outputPath:
+    description: outputPath
     required: true
-    default: 'zstd-v1.5.7-win64.zip'
-  cleanCwd:
-    description: cleanCwd
-    required: false
+
   cleanPaths:
     description: cleanPaths
     required: false

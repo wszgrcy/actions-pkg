@@ -30,7 +30,7 @@
     "format:check": "npx prettier --check .",
     "lint": "npx eslint .",
     "local-action": "npx @github/local-action . src/main.ts .env",
-    "package": "esbuild --inject:./script/cjs-shim.ts --tree-shaking=true --format=esm --minify --platform=node --bundle src/main.ts --outfile=dist/index.mjs",
+    "package": "esbuild --external:@reflink/reflink --inject:./script/cjs-shim.ts --tree-shaking=true --format=esm --minify --platform=node --bundle src/main.ts --outfile=dist/index.mjs",
     "package:watch": "npm run package -- --watch",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest",
     "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
@@ -38,6 +38,8 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
+    "extract-zip": "^2.0.1",
+    "ipull": "^4.0.3",
     "minimatch": "^10.0.3",
     "node-stream-zip": "^1.15.0",
     "rimraf": "^6.0.1",
