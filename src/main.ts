@@ -18,8 +18,8 @@ async function downloadZstd(options: {
   console.log('准备下载', url)
 
   let result = await downloadFile({ url: url, savePath: tempPath })
-  console.log(result)
-
+  // console.log(result)
+  await result.download()
   console.log('下载完成', tempPath)
   console.log(fs.existsSync(tempPath))
 
