@@ -38,6 +38,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
+    "execa": "^9.6.0",
     "extract-zip": "^2.0.1",
     "ipull": "^4.0.3",
     "minimatch": "^10.0.3",

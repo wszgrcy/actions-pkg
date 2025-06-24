@@ -6,6 +6,9 @@ import { rimraf } from 'rimraf'
 import { downloadFile } from 'ipull'
 import extract from 'extract-zip'
 import * as tar from 'tar'
+import { arch, platform, tmpdir } from 'os'
+import { $ } from 'execa'
+import { env } from 'process'
 async function downloadZstd(options: {
   tag: string
   fileName: string
@@ -29,7 +32,7 @@ async function downloadZstd(options: {
     await extract(tempPath, { dir: outputPath })
     console.log('解压完成', outputPath)
   }
-  return outputPath
+  return path.join(outputPath, 'zstd-v1.5.7-win64')
 }
 /**
  * The main function for the action.
@@ -52,15 +55,26 @@ export async function run(): Promise<void> {
 
     if (dir) {
       const cleanPaths = core.getInput('cleanPaths', { required: false })
-      console.log('清理', cleanPaths)
-
-      // rimraf([], { glob: { cwd: dir } })
+      let list = cleanPaths.split(/\n|\r\n/).map((item) => item.trim())
+      console.log('清理', list)
+      if (list.length) {
+        await rimraf(list, { glob: { cwd: dir } })
+      }
     }
     const outputPath = core.getInput('outputPath')
+    let tempTar = path.join(tmpdir(), 'temp.tar')
+    console.log('临时', tempTar)
+
     const absOutputPath = path.join(process.cwd(), outputPath)
-    tar.c({ sync: true }, [dir]).pipe(fs.createWriteStream(absOutputPath))
+    tar.c({ sync: true }, [dir]).pipe(fs.createWriteStream(tempTar))
     let res2 = fs.existsSync(absOutputPath)
     console.log('是否存在', absOutputPath, res2)
+    if (`${platform()}` === 'win32') {
+      console.log('准备压缩')
+      console.log('命令', `zstd ${tempTar} -o ${absOutputPath} -T0 -1`)
+
+      $({ localDir: cwd })(`zstd ${tempTar} -o ${absOutputPath} -T0 -1`)
+    }
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
