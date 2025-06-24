@@ -41,54 +41,40 @@ async function downloadZstd(options: {
  */
 export async function run(): Promise<void> {
   try {
-    console.log('env', process.env)
-    // console.log(cpus())
-    // console.log(cpuUsage())
-    // console.log(memoryUsage())
-
-    let cwd = await downloadZstd({
-      tag: 'v1.5.7',
-      fileName: 'zstd-v1.5.7-win64.zip'
-    })
-    console.log(process.cwd())
-    // todo execa执行zstd
-    let result = fs.readdirSync(cwd)
-    console.log(result)
+    let cwd = process.cwd()
+    console.log('cwd', cwd)
     const dir = core.getInput('dir')
-
-    if (dir) {
-      const cleanPaths = core.getInput('cleanPaths', { required: false })
+    let absDir = path.join(cwd, dir)
+    console.log('absDir', absDir)
+    /** 清理无用 */
+    const cleanPaths = core.getInput('cleanPaths', { required: false })
+    if (cleanPaths) {
       let list = cleanPaths.split(/\n|\r\n/).map((item) => item.trim())
       console.log('清理', list)
       if (list.length) {
-        await rimraf(list, { glob: { cwd: dir } })
+        await rimraf(list, { glob: { cwd: absDir } })
       }
     }
-    const outputPath = core.getInput('outputPath')
-    // fs.mkdirSync(path.join(process.cwd(), '../temp'), { recursive: true })
-    let tempTar = path.join(process.cwd(), './output-temp.tar')
-    console.log('临时', tempTar)
-    let absDir = path.join(process.cwd(), dir)
-    // let tempFileStream = fs.createWriteStream(tempTar)
-    // tar.c({}, [dir]).pipe(tempFileStream)
+    /** tar */
+    let tempTar = path.join(cwd, '../output-temp.tar')
     await tar.c({ file: tempTar }, [absDir])
-    // await new Promise<void>((resolve, reject) => {
-    //   tempFileStream.on('finish', resolve)
-    //   tempFileStream.on('error', reject)
-    // })
-    let res2 = fs.existsSync(tempTar)
-    console.log('是否存在', tempTar, res2)
-    const absOutputPath = path.join(process.cwd(), outputPath)
+    /** zstd */
+    const outputPath = core.getInput('outputPath')
+    const absOutputPath = path.join(cwd, outputPath)
+    let command = [tempTar, '-o', absOutputPath, '-T0', '-19']
+    console.log('command', command)
     if (`${platform()}` === 'win32') {
+      console.log('准备下载zstd')
+      let cwd = await downloadZstd({
+        tag: 'v1.5.7',
+        fileName: 'zstd-v1.5.7-win64.zip'
+      })
       console.log('准备压缩')
-      console.log('命令', `zstd ${tempTar} -o ${absOutputPath} -T0 -1`)
-
-      await $({ cwd: cwd })(`zstd.exe --help`)
-      await $({ cwd: cwd })(`zstd.exe ${tempTar} -o ${absOutputPath} -T0 -1`)
+      await $({ cwd: cwd })(`zstd.exe`, command)
     }
   } catch (error) {
-    console.log(error);
-    
+    console.log(error)
+
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
