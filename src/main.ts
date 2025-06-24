@@ -57,7 +57,9 @@ export async function run(): Promise<void> {
     }
     /** tar */
     let tempTar = path.join(cwd, '../output-temp.tar')
-    await tar.c({ file: tempTar, cwd: absDir }, ['.'])
+    let absDirDir = path.dirname(absDir)
+    let dirname = path.basename(absDir)
+    await tar.c({ file: tempTar, cwd: absDirDir }, [dirname])
     /** zstd */
     const outputPath = core.getInput('outputPath')
     const absOutputPath = path.join(cwd, outputPath)
