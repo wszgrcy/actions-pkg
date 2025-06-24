@@ -63,7 +63,9 @@ export async function run(): Promise<void> {
     /** zstd */
     const outputPath = core.getInput('outputPath')
     const absOutputPath = path.join(cwd, outputPath)
-    let command = [tempTar, '-o', absOutputPath, '-T0', '-19']
+
+    let level = core.getInput('zstdLevel')
+    let command = [tempTar, '-o', absOutputPath, '-T0', `-${level}`]
     console.log('command', command)
     if (`${platform()}` === 'win32') {
       console.log('准备下载zstd')

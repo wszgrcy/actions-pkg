@@ -19,7 +19,9 @@ inputs:
   cleanPaths:
     description: cleanPaths
     required: false
-
+  zstdLevel:
+    description: zstdLevel
+    default: '19'
 # Define your outputs here.
 outputs:
   time:
