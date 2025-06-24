@@ -1,5 +1,8 @@
 import * as core from '@actions/core'
-import { wait } from './wait.js'
+import { downloadZstd } from './download-release'
+import * as path from 'path'
+import * as fs from 'fs'
+import { rimraf } from 'rimraf'
 
 /**
  * The main function for the action.
@@ -8,18 +11,27 @@ import { wait } from './wait.js'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
+    console.log('env', process.env)
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    const zstdTag: string = core.getInput('zstdTag')
+    const zstdFileName: string = core.getInput('zstdFileName')
+    console.log(zstdTag)
+    console.log(zstdFileName)
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    await downloadZstd({ tag: zstdTag, fileName: zstdFileName })
+    console.log(process.cwd())
+    let zstdDir = path.join(process.cwd(), '../zstd')
+    console.log(zstdDir);
+    // todo execa执行zstd
+    let result = fs.readdirSync(zstdDir)
+    console.log(result)
+    const cleanCwd = core.getInput('cleanCwd', { required: false })
+    if (cleanCwd) {
+      const cleanPaths = core.getInput('cleanPaths', { required: false })
+      console.log('清理', cleanPaths)
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+      // rimraf([],{glob:{cwd:cleanCwd}})
+    }
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)

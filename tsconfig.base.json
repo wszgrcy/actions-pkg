@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2022"],
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "bundler",
     "newLine": "lf",
     "noImplicitAny": true,
     "noUnusedLocals": true,
@@ -17,6 +17,6 @@
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "ES2022"
+    "target": "ES2022",
   }
 }

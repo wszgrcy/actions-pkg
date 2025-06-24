@@ -23,21 +23,26 @@
     "node": ">=20"
   },
   "scripts": {
-    "bundle": "npm run format:write && npm run package",
+    "bundle": "npm run package",
     "ci-test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest",
     "coverage": "npx make-coverage-badge --output-path ./badges/coverage.svg",
     "format:write": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "npx eslint .",
     "local-action": "npx @github/local-action . src/main.ts .env",
-    "package": "npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "package": "esbuild --tree-shaking=true --minify --platform=node --bundle src/main.ts --outfile=dist/index.js",
     "package:watch": "npm run package -- --watch",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest",
     "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
   },
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1"
+    "@actions/core": "^1.11.1",
+    "minimatch": "^10.0.3",
+    "node-stream-zip": "^1.15.0",
+    "rimraf": "^6.0.1",
+    "tar": "^7.4.3",
+    "typed-rest-client": "^2.1.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
@@ -50,6 +55,7 @@
     "@types/node": "^20.19.0",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.32.1",
+    "esbuild": "^0.25.5",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.4.3",

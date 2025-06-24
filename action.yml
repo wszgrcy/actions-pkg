@@ -9,10 +9,20 @@ branding:
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  zstdTag:
+    description: zstdTag
     required: true
-    default: '1000'
+    default: 'v1.5.7'
+  zstdFileName:
+    description: zstdFileName
+    required: true
+    default: 'zstd-v1.5.7-win64.zip'
+  cleanCwd:
+    description: cleanCwd
+    required: false
+  cleanPaths:
+    description: cleanPaths
+    required: false
 
 # Define your outputs here.
 outputs:
