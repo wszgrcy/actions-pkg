@@ -66,11 +66,12 @@ export async function run(): Promise<void> {
     }
     const outputPath = core.getInput('outputPath')
     // fs.mkdirSync(path.join(process.cwd(), '../temp'), { recursive: true })
-    let tempTar = path.join(process.cwd(), '../.temp-tar/temp.tar')
+    let tempTar = path.join(process.cwd(), './output-temp.tar')
     console.log('临时', tempTar)
+    let absDir = path.join(process.cwd(), dir)
     // let tempFileStream = fs.createWriteStream(tempTar)
     // tar.c({}, [dir]).pipe(tempFileStream)
-    await tar.create({ file: tempTar }, [dir])
+    await tar.c({ file: tempTar }, [absDir])
     // await new Promise<void>((resolve, reject) => {
     //   tempFileStream.on('finish', resolve)
     //   tempFileStream.on('error', reject)
