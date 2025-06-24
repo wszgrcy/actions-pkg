@@ -83,9 +83,12 @@ export async function run(): Promise<void> {
       console.log('准备压缩')
       console.log('命令', `zstd ${tempTar} -o ${absOutputPath} -T0 -1`)
 
+      await $({ cwd: cwd })(`zstd.exe --help`)
       await $({ cwd: cwd })(`zstd.exe ${tempTar} -o ${absOutputPath} -T0 -1`)
     }
   } catch (error) {
+    console.log(error);
+    
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
