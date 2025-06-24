@@ -6,9 +6,9 @@ import { rimraf } from 'rimraf'
 import { downloadFile } from 'ipull'
 import extract from 'extract-zip'
 import * as tar from 'tar'
-import { arch, platform, tmpdir } from 'os'
+import { arch, cpus, platform, tmpdir } from 'os'
 import { $ } from 'execa'
-import { env } from 'process'
+import { cpuUsage, env, memoryUsage } from 'process'
 async function downloadZstd(options: {
   tag: string
   fileName: string
@@ -42,6 +42,9 @@ async function downloadZstd(options: {
 export async function run(): Promise<void> {
   try {
     console.log('env', process.env)
+    console.log(cpus())
+    console.log(cpuUsage())
+    console.log(memoryUsage())
 
     let cwd = await downloadZstd({
       tag: 'v1.5.7',
@@ -64,9 +67,13 @@ export async function run(): Promise<void> {
     const outputPath = core.getInput('outputPath')
     let tempTar = path.join(process.cwd(), '../temp/temp.tar')
     console.log('临时', tempTar)
-
+    let tempFileStream = fs.createWriteStream(tempTar)
     const absOutputPath = path.join(process.cwd(), outputPath)
-    tar.c({ sync: true }, [dir]).pipe(fs.createWriteStream(tempTar))
+    tar.c({}, [dir]).pipe(tempFileStream)
+    await new Promise<void>((resolve, reject) => {
+      tempFileStream.on('finish', resolve)
+      tempFileStream.on('error', reject)
+    })
     let res2 = fs.existsSync(tempTar)
     console.log('是否存在', tempTar, res2)
     if (`${platform()}` === 'win32') {
