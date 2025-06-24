@@ -1,9 +1,3 @@
-import { createRequire } from 'node:module'
-import url from 'node:url'
-
-globalThis.require = createRequire(import.meta.url)
-globalThis.__filename = url.fileURLToPath(import.meta.url)
-globalThis.__dirname = path.dirname(__filename) 
 import * as core from '@actions/core'
 import { downloadZstd } from './download-release'
 import * as path from 'path'
@@ -18,7 +12,7 @@ import { rimraf } from 'rimraf'
 export async function run(): Promise<void> {
   try {
     console.log('env', process.env)
-  // tar.c({strip:1}, ['eic']).pipe(fs.createWriteStream('xxx.tar'));
+    // tar.c({strip:1}, ['eic']).pipe(fs.createWriteStream('xxx.tar'));
 
     const zstdTag: string = core.getInput('zstdTag')
     const zstdFileName: string = core.getInput('zstdFileName')
@@ -28,7 +22,7 @@ export async function run(): Promise<void> {
     await downloadZstd({ tag: zstdTag, fileName: zstdFileName })
     console.log(process.cwd())
     let zstdDir = path.join(process.cwd(), '../zstd')
-    console.log(zstdDir);
+    console.log(zstdDir)
     // todo execa执行zstd
     let result = fs.readdirSync(zstdDir)
     console.log(result)
