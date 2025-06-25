@@ -41,6 +41,8 @@ async function downloadZstd(options: {
  */
 export async function run(): Promise<void> {
   try {
+    console.log(process.versions);
+    
     let cwd = process.cwd()
     console.log('cwd', cwd)
     const dir = core.getInput('dir')
