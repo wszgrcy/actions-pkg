@@ -41,8 +41,6 @@ async function downloadZstd(options: {
  */
 export async function run(): Promise<void> {
   try {
-    console.log(process.versions);
-    
     let cwd = process.cwd()
     console.log('cwd', cwd)
     const dir = core.getInput('dir')
@@ -69,7 +67,7 @@ export async function run(): Promise<void> {
     let level = core.getInput('zstdLevel')
     let command = [tempTar, '-o', absOutputPath, '-T0', `-${level}`]
     console.log('command', command)
-    if (`${platform()}` === 'win32') {
+    if (process.platform === 'win32') {
       console.log('准备下载zstd')
       let cwd = await downloadZstd({
         tag: 'v1.5.7',
@@ -77,6 +75,9 @@ export async function run(): Promise<void> {
       })
       console.log('准备压缩')
       await $({ cwd: cwd })(`zstd.exe`, command)
+    } else if (process.platform === 'linux') {
+      console.log('准备压缩')
+      await $({ stdio: 'inherit', shell: true, cwd: cwd })(`zstd`, command)
     }
   } catch (error) {
     console.log(error)
