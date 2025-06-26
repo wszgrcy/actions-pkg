@@ -47,12 +47,11 @@ export async function run(): Promise<void> {
     let absDir = path.join(cwd, dir)
     console.log('absDir', absDir)
     /** 清理无用 */
-    const cleanPaths = core.getInput('cleanPaths', { required: false })
+    const cleanPaths = core.getMultilineInput('cleanPaths', { required: false })
     if (cleanPaths) {
-      let list = cleanPaths.split(/\n|\r\n/).map((item) => item.trim())
-      console.log('清理', list)
-      if (list.length) {
-        await rimraf(list, { glob: { cwd: absDir } })
+      console.log('清理', cleanPaths)
+      if (cleanPaths.length) {
+        await rimraf(cleanPaths, { glob: { cwd: absDir, dot: true } })
       }
     }
     /** tar */
