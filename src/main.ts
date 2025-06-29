@@ -58,7 +58,10 @@ export async function run(): Promise<void> {
     let tempTar = path.join(cwd, '../output-temp.tar')
     let absDirDir = path.dirname(absDir)
     let dirname = path.basename(absDir)
+    console.log('准备tar')
     await tar.c({ file: tempTar, cwd: absDirDir }, [dirname])
+    console.log('准备删除文件夹')
+    await fs.promises.rm(absDir, { recursive: true, force: true })
     /** zstd */
     const outputPath = core.getInput('outputPath')
     const absOutputPath = path.join(cwd, outputPath)
