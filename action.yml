@@ -22,6 +22,9 @@ inputs:
   zstdLevel:
     description: zstdLevel
     default: '19'
+  chunkSize:
+    description: chunkSize
+    default: '2GB'
 # Define your outputs here.
 outputs:
   time:
